@@ -4,9 +4,9 @@ from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from .serializers import LoginStep1Serializer, LoginStep2Serializer
+from .serializers import LoginStep1Serializer, LoginStep2Serializer, RegisterUserSerializer
 from .models import PhoneOTP
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils import timezone
 
@@ -97,3 +97,8 @@ class LoginStepTwoVerifyView(APIView):
 				}
 			},status=status.HTTP_200_OK)
 
+
+class RegisterUserView(generics.CreateAPIView):
+	queryset = User.objects.all()
+	serializer_class= RegisterUserSerializer
+	permission_classes = [AllowAny]

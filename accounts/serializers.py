@@ -33,3 +33,24 @@ class LoginStep2Serializer(serializers.Serializer):
 			raise serializers.ValidationError("OTP must contain numbers only.")
 
 		return value
+
+
+class RegisterUserSerializer(serializers.ModelSerializer):
+	password = serializers.CharField(write_only=True, min_length=6)
+
+	class Meta:
+		model=User
+		fields = ['id', 'phone_number', 'full_name', 'password']
+
+	def validate_phone_number(self, value):
+		if not value.isdigit() or len(value) < 10:
+			raise serializers.ValidationError("Enter a valid phone number (at least 10 digits).")
+		return value
+
+	def create(self, validated_data):
+		user= User.objects.create_user(
+			phone_number= validated_data['phone_number'],
+			full_name= validated_data.get('full_name', ''),
+			password = validated_data['password']
+			)
+		return user
