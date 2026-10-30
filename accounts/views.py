@@ -38,6 +38,7 @@ class LoginStepOneView(APIView):
 
 		return Response({
 			"details": "Credentials verified. An OTP has been saved and sent to your phone.",
+			"otp": generated_otp,
 			"phone_number": phone_number
 		}, status = status.HTTP_200_OK)
 
