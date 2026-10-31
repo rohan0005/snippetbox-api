@@ -1,10 +1,11 @@
-from django.rest_framework import serializers
+from rest_framework import serializers
 from .models import Snippet, Comment
 
 class SnippetSerializer(serializers.ModelSerializer):
 	class Meta:
 		model= Snippet
-		fields = ['id', 'title', 'code', 'language', 'is_private', 'author', 'created_at']
+		fields = '__all__'
+		read_only_fields = ['author', 'created_at']
 
 		def validate_title(self,value):
 			if len(value.strip())  <=3:
@@ -14,7 +15,8 @@ class SnippetSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
 	class Meta:
 		model= Comment
-		fields = ['id', 'snippet', 'author', 'content', 'created_at']
+		fields = '__all__'
+		read_only_fields = ['author', 'created_at']
 
 		def validate_content(self,value):
 			if len(value.strip())  <=3:
