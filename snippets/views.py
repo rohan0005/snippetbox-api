@@ -47,7 +47,7 @@ class SnippetViewSet(viewsets.ModelViewSet):
 
 
     @action(detail=True,methods=["post"], permission_classes=[IsAuthenticated])
-    def fork(self, request,pk=None)
+    def fork(self, request,pk=None):
         original_snippet = self.get_object()
 
         forked_snippet = Snippet.objects.create(
@@ -58,10 +58,10 @@ class SnippetViewSet(viewsets.ModelViewSet):
             is_private = original_snippet.is_private
             )
 
-        serializer = serializer.get_serializer(forked_snippet)
-        return Response ("response": True,
+        serializer = self.get_serializer(forked_snippet)
+        return Response ({"response": True,
             "result": serializer.data,
-            "msg": "Duplicated!", status=status.HTTP_201_CREATED)
+            "msg": "Duplicated!"}, status=status.HTTP_201_CREATED)
 
 
 
