@@ -46,6 +46,25 @@ class SnippetViewSet(viewsets.ModelViewSet):
         })
 
 
+    @action(detail=True,methods=["post"], permission_classes=[IsAuthenticated])
+    def fork(self, request,pk=None)
+        original_snippet = self.get_object()
+
+        forked_snippet = Snippet.objects.create(
+            author=request.user,
+            title= f"Fork of {original_snippet.title}",
+            code = original_snippet.code,
+            language= original_snippet.language,
+            is_private = original_snippet.is_private
+            )
+
+        serializer = serializer.get_serializer(forked_snippet)
+        return Response ("response": True,
+            "result": serializer.data,
+            "msg": "Duplicated!", status=status.HTTP_201_CREATED)
+
+
+
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
