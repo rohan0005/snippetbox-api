@@ -45,6 +45,17 @@ class SnippetViewSet(viewsets.ModelViewSet):
             "msg": "My Snippet fetched!"
         })
 
+    @action(detail=True, methods=["get"], permission_classes=[IsAuthenticated])
+    def sinppet_comments(self,request,pk=None):
+        snippet = self.get_object()
+        comments = snippet.comment.all()
+
+        serializer= CommentSerializer(comments, many=True)
+
+        return Response ({"response": True,
+            "result": serializer.data,
+            "msg": "All comments related to snippet fetched!"}, status=status.HTTP_200_OK)
+
 
     @action(detail=True,methods=["post"], permission_classes=[IsAuthenticated])
     def fork(self, request,pk=None):
@@ -73,12 +84,3 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
     	serializer.save(author=self.request.user)
 
-    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
-    def sinppet_comments(self,request,id=None):
-        snippet = Snippet.objects.get(id)
-        comments = snippet.comments.all()
-
-        serializer = self.get_serializer(comments)
-        return Response ({"response": True,
-            "result": serializer.data,
-            "msg": "All comments related to snippet fetched!"}, status=status.HTTP_201_CREATED)
