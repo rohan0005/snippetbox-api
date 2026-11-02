@@ -73,3 +73,12 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
     	serializer.save(author=self.request.user)
 
+    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
+    def sinppet_comments(self,request,id=None):
+        snippet = Snippet.objects.get(id)
+        comments = snippet.comments.all()
+
+        serializer = self.get_serializer(comments)
+        return Response ({"response": True,
+            "result": serializer.data,
+            "msg": "All comments related to snippet fetched!"}, status=status.HTTP_201_CREATED)
